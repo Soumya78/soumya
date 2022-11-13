@@ -27,14 +27,14 @@ class Productitem extends StatelessWidget {
       footer: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: GridTileBar(leading:  IconButton(onPressed: (){product.togglestatus();},
-        icon: Icon(product.isFav ? Icons.favorite:Icons.favorite_border)),
+        icon: Icon(product.isFav ? Icons.favorite:Icons.favorite_border), color:Colors.deepOrangeAccent,),
         backgroundColor: Colors.black54,
         title: Text(product.title,textAlign: TextAlign.center,
         ),trailing: IconButton(onPressed: (){
            
 
         },icon: Icon(Icons.shopping_cart,
-        color:Colors.deepOrangeAccent,),
+       ),
         )
         ,),
       ),
