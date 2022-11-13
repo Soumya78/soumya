@@ -4,11 +4,11 @@ import 'package:flutter/widgets.dart';
 class CartItem{
 final String ?id ;
 final String ?title ;
-final int ?quantity ;
+final  int ? quantity ;
 final double ?price ;
 
 
-CartItem({@required this.id,@required this.price, this.quantity,@required this.title});
+CartItem({@required this.id,@required this.price,  this.quantity,@required this.title});
 }
 
 
@@ -21,6 +21,16 @@ class Cart with ChangeNotifier{
  int get itemcount{
   return   _items.length ;
  }
+ double get totalamount{
+ var total = 0.0 ;
+ _items.forEach((key, cartitems) { 
+
+  total += (cartitems.price * cartitems.quantity);
+ });
+ return total ;
+ }
+
+
 void addItem(String id , double price , String title){
   if(_items.containsKey(id)){
     _items.update(id, (existingCartitem) => CartItem(id: existingCartitem.id, 
