@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:shopp/providers/cart.dart';
 import 'package:shopp/providers/product.dart';
 import 'package:shopp/screens/product_details_screen.dart';
 
@@ -18,7 +19,8 @@ class Productitem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context,listen: false);
+    final cart = Provider.of<Cart>(context,listen: false);
     return GridTile(
       child: GestureDetector(onTap: (){Navigator.of(context).
       pushNamed(ProductDetailsScreen.routename,arguments: product.id);
@@ -31,8 +33,7 @@ class Productitem extends StatelessWidget {
         backgroundColor: Colors.black54,
         title: Text(product.title,textAlign: TextAlign.center,
         ),trailing: IconButton(onPressed: (){
-           
-
+           cart.addItem(product.id, product.price, product.title);
         },icon: Icon(Icons.shopping_cart,
        ),
         )

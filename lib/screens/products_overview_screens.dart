@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopp/providers/cart.dart';
+import 'package:shopp/widgets/badge.dart';
 import 'package:shopp/widgets/products_item.dart';
 import '../providers/product.dart';
 import '../widgets/products_grid.dart';
@@ -33,8 +36,21 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           
         },icon: Icon(Icons.more_vert),
         itemBuilder: (_)=>
-         [const PopupMenuItem(child: Text('Favorite'),value: Fillterotipns.Favorites,),
-         const PopupMenuItem(child: Text('more'),value: Fillterotipns.all,)]),
+         [const PopupMenuItem(child: Text('Favorite'),
+         value: Fillterotipns.Favorites,),
+         const PopupMenuItem(child: Text('more'),
+         value: Fillterotipns.all,),
+         ],
+         ),
+         Consumer<Cart>(builder: (context, cart, ch) => 
+          Badge(value: cart.itemcount.toString(),color: Colors.deepOrangeAccent,
+           child: IconButton(icon: Icon(Icons.shopping_cart),
+           onPressed: () {  },), 
+          ),
+          
+          
+            
+            ),
       ],
       ),
       body: Productsgrid(_showonlyfav),
