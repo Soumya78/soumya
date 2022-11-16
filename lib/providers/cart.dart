@@ -13,7 +13,7 @@ CartItem({@required this.id,@required this.price,  this.quantity,@required this.
 
 
 class Cart with ChangeNotifier{
-  final Map<String,CartItem> _items = {} ;
+   Map<String,CartItem> _items = {} ;
 
  Map<String,CartItem> get items{
   return {..._items};
@@ -46,6 +46,12 @@ void addItem(String id , double price , String title){
 void removeitem(String productid){
 _items.remove(productid);
 notifyListeners();
+}
+
+void clear(){
+  _items = {};
+  notifyListeners();
+  
 }
 
 }

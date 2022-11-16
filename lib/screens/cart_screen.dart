@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopp/providers/cart.dart';
+import 'package:shopp/providers/order.dart';
 import 'package:shopp/widgets/cartitem.dart';
 class CartScreen extends StatelessWidget {
   static const route = '/route';
@@ -23,7 +24,11 @@ class CartScreen extends StatelessWidget {
           Chip(label: Text('\$${cart.totalamount}'
           ,style: TextStyle(color: Theme.of(context).primaryTextTheme.titleLarge!.color),
           ),backgroundColor: Theme.of(context).backgroundColor,)
-          ,ElevatedButton(onPressed: (){}, child: Text("PLace order"))
+          ,ElevatedButton(onPressed: (){
+            Provider.of<Orders>(context,listen: false).addorders(cart.items.values.toList(), 
+            cart.totalamount);
+            cart.clear();
+          }, child: Text("PLace order"))
         ]
         ,),
         ),
