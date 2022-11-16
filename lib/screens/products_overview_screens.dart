@@ -47,7 +47,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           Badge(value: cart.itemcount.toString(),color: Colors.deepOrangeAccent,
            child: IconButton(icon: Icon(Icons.shopping_cart),
            onPressed: () { 
+             print("not good");
+            print(cart.totalamount);
+           
             Navigator.of(context).pushNamed(CartScreen.route);
+            
             },), 
           ),
           

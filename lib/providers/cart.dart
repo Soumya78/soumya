@@ -13,7 +13,7 @@ CartItem({@required this.id,@required this.price,  this.quantity,@required this.
 
 
 class Cart with ChangeNotifier{
- late Map<String,CartItem> _items = {} ;
+  final Map<String,CartItem> _items = {} ;
 
  Map<String,CartItem> get items{
   return {..._items};
@@ -25,9 +25,11 @@ class Cart with ChangeNotifier{
  var total = 0.0 ;
  _items.forEach((key, cartitems) { 
 
-  total += (cartitems.price * cartitems.quantity);
+  total += cartitems.price!.toDouble() * cartitems.quantity!.toDouble();
  });
  return total ;
+ 
+
  }
 
 
@@ -40,6 +42,10 @@ void addItem(String id , double price , String title){
     _items.putIfAbsent(id, () => CartItem(id: DateTime.now().toString(), price: price, title: title));
   }
   notifyListeners();
+}
+void removeitem(String productid){
+_items.remove(productid);
+notifyListeners();
 }
 
 }
