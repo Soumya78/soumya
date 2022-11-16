@@ -49,7 +49,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
            child: IconButton(icon: Icon(Icons.shopping_cart),
            onPressed: () { 
              print("not good");
-            print(cart.totalamount);
+            print(cart.totalamount.toString() + "this is working");
            
             Navigator.of(context).pushNamed(CartScreen.route);
             
