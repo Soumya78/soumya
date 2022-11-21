@@ -47,6 +47,19 @@ void removeitem(String productid){
 _items.remove(productid);
 notifyListeners();
 }
+void removesingleitem(String prodid){
+if(!_items.containsKey(prodid)){
+  return ;
+}if(_items[prodid]!.quantity > 1){
+    _items.update(prodid, (existingitem) => CartItem(id: existingitem.id,
+     price: existingitem.price,
+     quantity: existingitem.quantity-1,
+      title: existingitem.title ),);
+}else{
+  _items.remove(prodid);
+}
+notifyListeners();
+}
 
 void clear(){
   _items = {};
