@@ -49,7 +49,12 @@ class Products with ChangeNotifier{
  }
  
 
- void addProducts(){
+ void addProducts(Product product){
+ final addnewproduct  = Product(id: product.id,
+  description: product.description, 
+  imgurl: product.imgurl,
+   price: product.price,
+    title: product.title);
   //_items.add(value);
   notifyListeners();
  }
