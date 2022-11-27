@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopp/providers/product_provider.dart';
+import 'package:shopp/screens/edit_productscreen.dart';
 import 'package:shopp/widgets/app-drawer.dart';
 import 'package:shopp/widgets/user_product_item.dart';
 class UserproductsScreen extends StatelessWidget {
@@ -13,7 +14,9 @@ class UserproductsScreen extends StatelessWidget {
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(title: Text("Your Products"),actions: <Widget>[
-       IconButton(onPressed: (){}, icon: const Icon(Icons.add),
+       IconButton(onPressed: (){
+        Navigator.of(context).pushNamed(Editproductscreen.routname);
+       }, icon: const Icon(Icons.add),
        )
       ],
       ),
@@ -22,7 +25,7 @@ class UserproductsScreen extends StatelessWidget {
        =>Column(
 
          children:[ Userproductitem(productsdata.items[i].title, 
-             productsdata.items[i].imgurl),
+             productsdata.items[i].imgurl,productsdata.items[i].id),
        ]) ,
       itemCount:productsdata.items.length ,
       ),

@@ -55,7 +55,24 @@ class Products with ChangeNotifier{
   imgurl: product.imgurl,
    price: product.price,
     title: product.title);
+    _items.add(addnewproduct);
   //_items.add(value);
   notifyListeners();
  }
+ void updateProducts(String id , Product newproduct){
+  final  prodindex = _items.indexWhere((element) => element.id == id);
+  if(prodindex >= 0){
+_items[prodindex] = newproduct ;
+  }else{
+    print('....');
+  }
+  
+  notifyListeners();
+ }
+
+void deleteProducts(String id){
+_items.removeWhere((element) => element.id == id);
+notifyListeners();
+}
+
 }
