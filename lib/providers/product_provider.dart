@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/widgets.dart';
-
+import 'package:http/http.dart' as http;
 
 import 'product.dart';
 class Products with ChangeNotifier{
@@ -50,12 +51,21 @@ class Products with ChangeNotifier{
  
 
  void addProducts(Product product){
- final addnewproduct  = Product(id: product.id,
+  var url = Uri.parse('https://shopapp-14acd-default-rtdb.firebaseio.com/products.json');
+    http.post(url,body: json.encode({
+      'title':product.title,
+      'description':product.description,
+      'imageurl':product.imgurl,
+      'price':product.price,
+      'isfav':product.isFav,
+    }));
+ final addnewproduct  = Product(id: DateTime.now().toString(),
   description: product.description, 
   imgurl: product.imgurl,
    price: product.price,
     title: product.title);
     _items.add(addnewproduct);
+   // _items.insert(0,addnewproduct);
   //_items.add(value);
   notifyListeners();
  }

@@ -4,16 +4,20 @@ import 'package:shopp/providers/product.dart';
 import 'package:shopp/providers/product_provider.dart';
 class Editproductscreen extends StatefulWidget {
   static const routname = '/edit-productscreen';
-  const Editproductscreen({ Key? key }) : super(key: key);
+  
 
   @override
   State<Editproductscreen> createState() => _EditproductscreenState();
 }
 
 class _EditproductscreenState extends State<Editproductscreen> {
+  
   final _pricenode = FocusNode();
   final _descriptionfocusnode = FocusNode();
   final _imagecontroller = TextEditingController();
+  final _titlecontroller = TextEditingController();
+  final _pricecontroller = TextEditingController();
+  final _descriptioncontroller = TextEditingController();
   final _imagefocusnode = FocusNode();
   final _form = GlobalKey<FormState>();
   var _isInit = true ;
@@ -42,24 +46,32 @@ class _EditproductscreenState extends State<Editproductscreen> {
 
   @override
   void didChangeDependencies() {
-    if(_isInit){
-   final prodid  = ModalRoute.of(context)!.settings.arguments  as String ;
-  _editedproduct =  Provider.of<Products>(context,listen: false).findbyId(prodid);
-
-  _initvalues = {
+    if(!_isInit){
+   final prodid  = ModalRoute.of(context)?.settings.arguments  as String ;
+   if(prodid != null){
+    _editedproduct =  Provider.of<Products>(context,listen: false).findbyId(prodid); 
+    _initvalues = {
 'title' : _editedproduct.title,
  'Description' : _editedproduct.description,
-  'price':_editedproduct.price,
-  'id' : _editedproduct.id.toString(),
+  'price':_editedproduct.price.toString(),
+ 
   'imageurl':_editedproduct.imgurl,
 
   };
- // _imagecontroller.text = _editedproduct.imgurl;
+  _descriptioncontroller.text = _editedproduct.description;
+  _titlecontroller.text = _editedproduct.title;
+  _pricecontroller.text = _editedproduct.price.toString();
+  _imagecontroller.text = _editedproduct.imgurl;
+   }
+  
+
+  
+ 
     }
     _isInit = false ;
-   
+    
     super.didChangeDependencies();
-  }
+  } 
   void _updateimageurl(){
     if(!_imagefocusnode.hasFocus){
      
@@ -77,12 +89,17 @@ class _EditproductscreenState extends State<Editproductscreen> {
   void _saveform(){
     final isvalid = _form.currentState!.validate();
     if(!isvalid){
+      
       return null ;
     }
+    print(isvalid);
     _form.currentState!.save();
+    
     if(_editedproduct.id!= null){
+      print ('data is null');
       Provider.of<Products>(context,listen: false).updateProducts(_editedproduct.id, _editedproduct);
     }
+    print('not adding');
     Provider.of<Products>(context,listen: false).addProducts(_editedproduct);
     Navigator.of(context).pop();
   }
@@ -101,7 +118,7 @@ class _EditproductscreenState extends State<Editproductscreen> {
   
   @override
   Widget build(BuildContext context) {
-   
+  
     return Scaffold(
       appBar: AppBar(actions: <Widget>[
         IconButton(onPressed: (_saveform), icon: Icon(Icons.save),
@@ -111,9 +128,10 @@ class _EditproductscreenState extends State<Editproductscreen> {
       padding: EdgeInsets.all(6.0),
       child: Form(key: _form,child:ListView(children: <Widget>[
             TextFormField(
-             
+            // initialValue: _initvalues['title'].toString(),
               decoration: InputDecoration(labelText: 'Title'),
            textInputAction: TextInputAction.next,
+           controller: _titlecontroller,
            validator:(value){
             if(value!.isEmpty){
               return 'Please provide a value';
@@ -123,13 +141,14 @@ class _EditproductscreenState extends State<Editproductscreen> {
            onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_pricenode), 
            onSaved: (value){
             _editedproduct = Product(id: _editedproduct.id, description: _editedproduct.description, 
-            imgurl: _editedproduct.imgurl, 
+            imgurl: _editedproduct.imgurl.toString(), 
             price: _editedproduct.price, 
-            title: _editedproduct.title,
+            title: value!,
             isFav: _editedproduct.isFav);
            },
            ),
              TextFormField(decoration: InputDecoration(labelText: 'Price'),
+             // initialValue: _initvalues['price'].toString(),
            textInputAction: TextInputAction.next ,
            keyboardType: TextInputType.number,focusNode: _pricenode,
            validator: (value){
@@ -144,8 +163,24 @@ class _EditproductscreenState extends State<Editproductscreen> {
             }
             return null ;
            },
+            onSaved: (value){
+            _editedproduct = Product(id: _editedproduct.id, description: _editedproduct.description, 
+            imgurl: _editedproduct.imgurl.toString(), 
+            price: double.parse(value!), 
+            title: _editedproduct.title,
+            isFav: _editedproduct.isFav);
+           },
            onFieldSubmitted: (_)=>FocusScope.of(context).requestFocus(_descriptionfocusnode),),
             TextFormField( 
+              controller: _descriptioncontroller,
+            //  initialValue: _initvalues['Description'].toString(),
+             onSaved: (value){
+            _editedproduct = Product(id: _editedproduct.id, description: value!, 
+            imgurl: _editedproduct.imgurl.toString(), 
+            price: _editedproduct.price, 
+            title: _editedproduct.title,
+            isFav: _editedproduct.isFav);
+           },
             decoration: InputDecoration(labelText: 'Description'),
             maxLines: 3,
            textInputAction: TextInputAction.next ,
@@ -159,13 +194,7 @@ class _EditproductscreenState extends State<Editproductscreen> {
              }
              return null ;
            },
-            onSaved: (value){
-            _editedproduct = Product(id: _editedproduct.id, description: _editedproduct.description, 
-            imgurl: _editedproduct.imgurl, 
-            price: _editedproduct.price, 
-            title: _editedproduct.title,
-            isFav: _editedproduct.isFav);
-           },
+            
            focusNode: _descriptionfocusnode,
            ),
            Row(children: <Widget>[
@@ -182,11 +211,13 @@ class _EditproductscreenState extends State<Editproductscreen> {
                 setState(() {
                   
                 });
-              },controller:_imagecontroller,decoration: InputDecoration(labelText: 'Imageurl')
-              ,keyboardType: TextInputType.url,textInputAction:TextInputAction.done,
+              },decoration: InputDecoration(labelText: 'Imageurl'),
+             // initialValue: _initvalues['imageurl'].toString(),
+             controller: _imagecontroller,
+              keyboardType: TextInputType.url,textInputAction:TextInputAction.done,
                onSaved: (value){
             _editedproduct = Product(id: _editedproduct.id, description: _editedproduct.description, 
-            imgurl: _editedproduct.imgurl, 
+            imgurl: value!, 
             price: _editedproduct.price, 
             title: _editedproduct.title,
             isFav: _editedproduct.isFav);
@@ -210,6 +241,8 @@ class _EditproductscreenState extends State<Editproductscreen> {
       ),
       ),
     ),
+     
     );
-  }
-}
+    
+   }
+   }
