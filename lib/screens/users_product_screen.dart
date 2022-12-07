@@ -6,6 +6,10 @@ import 'package:shopp/widgets/app-drawer.dart';
 import 'package:shopp/widgets/user_product_item.dart';
 class UserproductsScreen extends StatelessWidget {
   static const routenamed = '/user_products';
+
+  Future<void>_refreshproducts(BuildContext context) async {
+  await Provider.of<Products>(context,listen: false).fetchandSetProducts();
+  }
   const UserproductsScreen({ Key? key }) : super(key: key);
 
   @override
@@ -20,16 +24,19 @@ class UserproductsScreen extends StatelessWidget {
        )
       ],
       ),
-      body: Padding(padding: const EdgeInsets.all(8),
-      child: ListView.builder(itemBuilder:(_,i)
-       =>Column(
-
-         children:[ Userproductitem(productsdata.items[i].title, 
-             productsdata.items[i].imgurl,productsdata.items[i].id),
-       ]) ,
-      itemCount:productsdata.items.length ,
-      ),
-
+      body: RefreshIndicator(
+        onRefresh: () =>_refreshproducts(context),
+        child: Padding(padding: const EdgeInsets.all(8),
+        child: ListView.builder(itemBuilder:(_,i)
+         =>Column(
+      
+           children:[ Userproductitem(productsdata.items[i].title, 
+               productsdata.items[i].imgurl,productsdata.items[i].id),
+         ]) ,
+        itemCount:productsdata.items.length ,
+        ),
+      
+        ),
       ),
       
     );

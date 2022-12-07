@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 
 import 'product.dart';
 class Products with ChangeNotifier{
- final List<Product>  _items =  [
-    Product(
+  List<Product>  _items =  [
+    /* Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
@@ -37,8 +37,8 @@ class Products with ChangeNotifier{
        imgurl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
+    */
   ];
-
  List<Product> get items {
     return [..._items];
  }
@@ -50,16 +50,38 @@ class Products with ChangeNotifier{
  }
  
 
- void addProducts(Product product){
+Future<void> fetchandSetProducts() async{
+var url = Uri.parse('https://shopapp-14acd-default-rtdb.firebaseio.com/products.json');
+try{
+ final response = await http.get(url);
+ final extarctedata = json.decode(response.body) as Map<String,dynamic>;
+ final List<Product> loadedproduct = [];
+ extarctedata.forEach((id, data) {
+  loadedproduct.add(Product(id: id, description: data['Description'],
+   imgurl:data['imgurl'], price:data['price'], title: data['title']));
+ });
+ _items = loadedproduct ;
+ notifyListeners();
+ //print(json.decode(response.body));
+ }catch(error){
+ throw error ;
+}
+
+}
+
+
+ Future<void> addProducts(Product product) async{
   var url = Uri.parse('https://shopapp-14acd-default-rtdb.firebaseio.com/products.json');
-    http.post(url,body: json.encode({
+  try{
+   final response =  await http.post(url,body: json.encode({
       'title':product.title,
       'description':product.description,
       'imageurl':product.imgurl,
       'price':product.price,
       'isfav':product.isFav,
-    }));
- final addnewproduct  = Product(id: DateTime.now().toString(),
+    }),
+   );
+final addnewproduct  = Product(id: json.decode(response.body)['name'],
   description: product.description, 
   imgurl: product.imgurl,
    price: product.price,
@@ -68,10 +90,27 @@ class Products with ChangeNotifier{
    // _items.insert(0,addnewproduct);
   //_items.add(value);
   notifyListeners();
+
+
+  }catch(error){
+    throw error ;
+  }
+   
+ 
+    
  }
- void updateProducts(String id , Product newproduct){
+ 
+ 
+ Future <void> updateProducts(String id , Product newproduct) async{
   final  prodindex = _items.indexWhere((element) => element.id == id);
   if(prodindex >= 0){
+    final url = Uri.parse('https://shopapp-14acd-default-rtdb.firebaseio.com/products/$id.json');
+    http.patch(url,body: json.encode({'title':newproduct.title,
+    'description':newproduct.description,
+    'imageurl ':newproduct.imgurl,
+    'price':newproduct.price,
+  
+  }));
 _items[prodindex] = newproduct ;
   }else{
     print('....');
@@ -81,7 +120,10 @@ _items[prodindex] = newproduct ;
  }
 
 void deleteProducts(String id){
+   final url = Uri.parse('https://shopapp-14acd-default-rtdb.firebaseio.com/products/$id.json');
+   http.delete(url);
 _items.removeWhere((element) => element.id == id);
+
 notifyListeners();
 }
 

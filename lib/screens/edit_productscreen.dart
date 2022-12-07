@@ -21,6 +21,7 @@ class _EditproductscreenState extends State<Editproductscreen> {
   final _imagefocusnode = FocusNode();
   final _form = GlobalKey<FormState>();
   var _isInit = true ;
+  var _isLoading = false ;
   var _initvalues = {
  'title' : '',
  'Description' : '',
@@ -86,7 +87,7 @@ class _EditproductscreenState extends State<Editproductscreen> {
      });
     }
   }
-  void _saveform(){
+ Future <void> _saveform() async{
     final isvalid = _form.currentState!.validate();
     if(!isvalid){
       
@@ -94,15 +95,44 @@ class _EditproductscreenState extends State<Editproductscreen> {
     }
     print(isvalid);
     _form.currentState!.save();
+    setState(() {
+      _isLoading = true ;
+    });
     
     if(_editedproduct.id!= null){
       print ('data is null');
-      Provider.of<Products>(context,listen: false).updateProducts(_editedproduct.id, _editedproduct);
-    }
+      await Provider.of<Products>(context,listen: false).updateProducts(_editedproduct.id, _editedproduct);
+     
     print('not adding');
-    Provider.of<Products>(context,listen: false).addProducts(_editedproduct);
-    Navigator.of(context).pop();
+    try{
+         await Provider.of<Products>(context,listen: false)
+    .addProducts(_editedproduct);
+    }
+  catch(error){
+    await showDialog(context: context, 
+     builder:(ctx)=> AlertDialog(title: Text('An error occured')
+     ,content: Text(error.toString()),actions: <Widget>[
+      TextButton(onPressed: (){
+        Navigator.of(ctx).pop();
+      }, child: Text('Okay'))
+     ],
+     ),
+     );
+    }/*finally{
+     setState(() {
+       _isLoading  = false ;
+     });
+      
+     Navigator.of(context).pop();
+    } */
+    setState(() {
+        _isLoading = false ;
+      });
+    }
   }
+      
+   
+  
 
 
   @override
@@ -124,7 +154,7 @@ class _EditproductscreenState extends State<Editproductscreen> {
         IconButton(onPressed: (_saveform), icon: Icon(Icons.save),
         )
       ],title: Text('Edit your products'),
-    ),body: Padding(
+    ),body: _isLoading ?Center(child: CircularProgressIndicator(),): Padding(
       padding: EdgeInsets.all(6.0),
       child: Form(key: _form,child:ListView(children: <Widget>[
             TextFormField(
