@@ -13,7 +13,7 @@ enum Fillterotipns{
     all 
    }
 class ProductsOverviewScreen extends StatefulWidget {
-
+static const routenamed = '/productsoverviewscreen';
    
   
   
@@ -36,9 +36,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   //Future.delayed(Duration.zero).then((value) => Provider.of<Products>(context).fetchandSetProducts());
     super.initState();
   }
-  @override
+ /* @override
   void didChangeDependencies() {
-    _isloading = true ;
+   _isloading = true ;
   if(_init){
     Provider.of<Products>(context,listen: false).fetchandSetProducts().then((_){
       setState(() {
@@ -49,7 +49,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   _init = false ;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
