@@ -36,11 +36,15 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   //Future.delayed(Duration.zero).then((value) => Provider.of<Products>(context).fetchandSetProducts());
     super.initState();
   }
- /* @override
-  void didChangeDependencies() {
+  @override
+  void didChangeDependencies() async{
+    print('problem here');
    _isloading = true ;
   if(_init){
-    Provider.of<Products>(context,listen: false).fetchandSetProducts().then((_){
+    print('problemhere 1');
+    print(_init);
+   await Provider.of<Products>(context,listen: false).fetchandSetProducts().then((_){
+     print('problemhere 2');
       setState(() {
         _isloading = false ;
       });
@@ -49,7 +53,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   _init = false ;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-  } */
+  } 
 
   @override
   Widget build(BuildContext context) {

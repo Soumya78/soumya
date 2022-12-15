@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           create: (ctx)=> Orders(),
         ),
 
-       // ChangeNotifierProvider(create:(ctx)=> Otpitems()),
+        ChangeNotifierProvider(create:(ctx)=> Otpitems()),
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
