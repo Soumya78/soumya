@@ -9,35 +9,53 @@ import 'package:sms_autofill/sms_autofill.dart';
 class OtpScreen extends StatefulWidget {
  // const OtpScreen({ Key? key }) : super(key: key);
   static const routenamed = '/Otpscreen';
+ 
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
-  String codevalue = "";
   
+   String codevalue = "";
+   bool _isloading  = true ;
   @override
   void initState(){
     super.initState();
     _listenotp();
   }
+
+  
+  
+
+
+void _listenotp() async {
+  
+ await SmsAutoFill().listenForCode;
+
+ if(await SmsAutoFill().code.isEmpty){
+  return ;
+ }else{
+  Navigator.of(context).pushNamed(ProductsOverviewScreen.routenamed);
+ }
+ 
+ print("otp listen called");
+}
+
   TextEditingController otpcontroller = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    
+   // String codevalue = "";
    //final otp = Provider.of<Otpitems>(context);
     return Scaffold(appBar: AppBar(title:Text("OtpScreen"),)
     ,body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center
     ,children:<Widget> [
        Container(padding: EdgeInsets.symmetric(horizontal: 50,vertical: 10),
-       child: PinFieldAutoFill(currentCode: code,codeLength: 4,onCodeChanged:(val){
+       child: PinFieldAutoFill(currentCode: codevalue,codeLength: 4,onCodeChanged:(val){
           _listenotp();
        },),),
-       ElevatedButton(onPressed: () async{
-        await  SmsAutoFill().listenForCode();
-       }, child: Text("Listen for sms code")),
+     
     ],
     ),),
     );
@@ -54,14 +72,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   @override
   void codeUpdated() {
-    print("Update code $code");
-    setState(() {
-      print("codeupdated");
-    });
     // TODO: implement codeUpdated
-  }}
-
-void _listenotp() async {
- await SmsAutoFill().listenForCode;
- print("otp listen called");
+  }
 }

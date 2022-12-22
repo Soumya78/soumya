@@ -23,7 +23,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       'otp-signature': signcode.toString()
     };
 
-              if(!signcode.isEmpty ){
+              if(mobileno!.text.isEmpty ||
+              mobileno!.text.toString().length != 10 ){
+                return ;
+                
+              }else {
                 Navigator.of(context).pushNamed(OtpScreen.routenamed);
               }
               print(sendOtpdata.entries);
